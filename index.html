@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reddit Warming - Houssein</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, 'Segoe UI', sans-serif; background: #111; color: #ddd; line-height: 1.5; }
+  .app { max-width: 640px; margin: 0 auto; padding: 16px; }
+  .header { background: #ff4500; border-radius: 12px; padding: 24px; text-align: center; color: white; margin-bottom: 20px; }
+  .header h1 { font-size: 22px; margin-bottom: 4px; }
+  .header p { font-size: 14px; opacity: 0.85; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+  .tab { flex: 1; padding: 10px; text-align: center; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 600; color: #888; transition: all 0.2s; }
+  .tab.active { background: #ff4500; border-color: #ff4500; color: white; }
+  .section { display: none; }
+  .section.active { display: block; }
+  .progress { background: #1a1a1a; border-radius: 10px; padding: 14px; margin-bottom: 16px; border: 1px solid #222; }
+  .progress-bar { background: #222; border-radius: 6px; height: 10px; overflow: hidden; margin-top: 8px; }
+  .progress-fill { background: #ff4500; height: 100%; border-radius: 6px; transition: width 0.4s; width: 0%; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: #888; }
+  .week-title { font-size: 16px; font-weight: 700; padding: 14px 0 8px; border-bottom: 1px solid #222; margin-bottom: 10px; color: #ff8a65; }
+  .task { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid #1a1a1a; align-items: flex-start; }
+  .task:last-child { border-bottom: none; }
+  .cb { appearance: none; -webkit-appearance: none; width: 20px; height: 20px; border: 2px solid #444; border-radius: 5px; cursor: pointer; flex-shrink: 0; margin-top: 1px; position: relative; }
+  .cb:checked { background: #ff4500; border-color: #ff4500; }
+  .cb:checked::after { content: '\2713'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: white; font-size: 13px; font-weight: 700; }
+  .task-text { font-size: 14px; }
+  .task.done .task-text { text-decoration: line-through; color: #555; }
+  .tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle; }
+  .tag.j1 { background: #1b3a1b; color: #66bb6a; }
+  .tag.s1 { background: #1a2a3a; color: #42a5f5; }
+  .tag.s2 { background: #3a2a1a; color: #ffa726; }
+  .tag.s3 { background: #3a1a2a; color: #ef5350; }
+  .alert { background: #2a1010; border: 1px solid #4a1515; border-radius: 10px; padding: 12px; margin: 14px 0; font-size: 13px; color: #ef9a9a; }
+  .notifier-card { background: #1a1a1a; border-radius: 12px; padding: 20px; border: 1px solid #222; margin-bottom: 16px; }
+  .notifier-card h3 { font-size: 15px; margin-bottom: 12px; color: #ff8a65; }
+  .notifier-card label { font-size: 12px; color: #888; display: block; margin-bottom: 4px; margin-top: 12px; }
+  .notifier-card input, .notifier-card select, .notifier-card textarea { width: 100%; background: #111; border: 1px solid #333; border-radius: 8px; padding: 10px; color: #ddd; font-size: 14px; font-family: inherit; }
+  .notifier-card textarea { height: 60px; resize: vertical; }
+  .notifier-card input:focus, .notifier-card textarea:focus { border-color: #ff4500; outline: none; }
+  .contact-list { margin-top: 12px; }
+  .contact-row { display: flex; gap: 8px; margin-bottom: 6px; align-items: center; }
+  .contact-row input { flex: 1; }
+  .btn-remove { background: #3a1a1a; border: none; color: #ef5350; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-size: 16px; }
+  .btn-add { background: #1a2a1a; border: 1px dashed #4caf50; color: #4caf50; padding: 8px; border-radius: 8px; cursor: pointer; font-size: 13px; width: 100%; margin-top: 6px; }
+  .btn-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+  .btn-send { border: none; color: white; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; width: 100%; transition: opacity 0.2s; }
+  .btn-send:hover { opacity: 0.85; }
+  .btn-send:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-whatsapp { background: #25d366; }
+  .btn-copy { background: #555; }
+  .btn-mailto { background: #ff4500; }
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #25d366; color: white; padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 600; z-index: 9999; display: none; }
+  .history { margin-top: 16px; }
+  .history h4 { font-size: 13px; color: #888; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+  .history-item { background: #111; border-radius: 8px; padding: 10px; margin-bottom: 6px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+  .history-item .hi-link { color: #42a5f5; text-decoration: none; word-break: break-all; flex: 1; margin-right: 10px; }
+  .history-item .hi-time { color: #555; font-size: 11px; white-space: nowrap; }
+  .history-item .hi-count { background: #1a2a1a; color: #66bb6a; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 8px; white-space: nowrap; }
+  .rule { background: #1a1a1a; border-radius: 10px; padding: 14px; margin-bottom: 10px; border-left: 3px solid #ef5350; }
+  .rule.tip { border-left-color: #66bb6a; }
+  .rule h4 { font-size: 14px; margin-bottom: 4px; }
+  .rule p { font-size: 13px; color: #aaa; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="header">
+  <h1>Reddit Warming</h1>
+  <p>Guide de Houssein - Linkflows</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('checklist')">Checklist</div>
+  <div class="tab" onclick="showTab('notifier')">Notifier l'equipe</div>
+  <div class="tab" onclick="showTab('regles')">Regles</div>
+</div>
+
+<div class="section active" id="sec-checklist">
+
+<div class="progress">
+  <div class="progress-label">
+    <span>Progression</span>
+    <span id="pctText">0%</span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="pFill"></div></div>
+</div>
+
+<div class="week-title">Jour 1 - Creer le compte</div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Creer un email dedie (Gmail/Outlook) <span class="tag j1">J1</span></div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Creer le compte Reddit avec un pseudo naturel (pas de nom de marque)</div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Verifier l'email + activer le 2FA</div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Ajouter un avatar, une banniere et une bio courte (sans lien)</div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Rejoindre 5-8 subreddits faciles : r/AskReddit, r/NoStupidQuestions, r/LifeProTips, r/CasualConversation, r/todayilearned</div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Rejoindre 3-5 subreddits cibles (r/marketing, r/Entrepreneur, r/SaaS, r/SideProject...)</div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Rejoindre 2-3 subreddits perso (hobbies : foot, cuisine, gaming...)</div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Lire les regles de chaque subreddit cible</div></div>
+
+<div class="week-title">Semaine 1 - Observer et reagir (objectif : 100 karma)</div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Upvoter 10-15 posts/jour sur differents subreddits <span class="tag s1">Chaque jour</span></div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Laisser 3-5 commentaires/jour sur r/AskReddit (posts en "Rising")</div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Augmenter a 5-8 commentaires/jour en variant les subreddits</div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Repondre a ceux qui repondent a tes commentaires (conversations naturelles)</div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Atteindre 50+ karma</div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Atteindre 100 karma - Fin de semaine 1</div></div>
+
+<div class="alert">Zero lien, zero mention de produit cette semaine. Uniquement des commentaires utiles et naturels.</div>
+
+<div class="week-title">Semaine 2 - Contribuer activement (objectif : 500 karma)</div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Creer 1er post texte sur un subreddit facile (question sur r/AskReddit ou tip sur r/LifeProTips) <span class="tag s2">S2</span></div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Ecrire 1 post de valeur sur un subreddit cible (ex: "5 erreurs en marketing digital")</div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Continuer 5-10 commentaires/jour</div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Poster 2-3 posts texte dans la semaine (jamais 2 le meme jour sur le meme sub)</div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Atteindre 200+ karma</div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Atteindre 500 karma - Fin de semaine 2</div></div>
+
+<div class="week-title">Semaines 3-4 - Premiere promo douce (regle 90/10)</div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Repondre a une question en mentionnant le produit naturellement + alternatives <span class="tag s3">S3-4</span></div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Ecrire un post "retour d'experience" ou "comparatif d'outils" incluant le produit</div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Premiere mention : NOM du produit sans lien (attendre qu'on demande le lien)</div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Verifier le ratio : max 1 post promo pour 9 contributions organiques</div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Continuer 90% d'activite organique en parallele</div></div>
+<div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Atteindre 1000+ karma - Compte chaud !</div></div>
+
+</div>
+
+<div class="section" id="sec-notifier">
+
+<div class="notifier-card">
+  <h3>Contacts de l'equipe</h3>
+  <p style="font-size:13px;color:#888;margin-bottom:8px;">Ajoute les numeros WhatsApp et/ou emails de l'equipe. Quand tu postes sur Reddit, tu pourras les notifier en 1 clic pour qu'ils aillent upvoter et commenter.</p>
+
+  <div style="margin-top:12px;margin-bottom:8px;">
+    <label style="margin:0;font-weight:600;color:#25d366;">Numeros WhatsApp</label>
+    <p style="font-size:11px;color:#666;margin-top:2px;">Format international : +212600000000</p>
+  </div>
+  <div class="contact-list" id="waList">
+    <div class="contact-row"><input type="tel" placeholder="+212600000000" class="team-wa"><button class="btn-remove" onclick="removeRow(this,'wa')">x</button></div>
+    <div class="contact-row"><input type="tel" placeholder="+212600000000" class="team-wa"><button class="btn-remove" onclick="removeRow(this,'wa')">x</button></div>
+    <div class="contact-row"><input type="tel" placeholder="+212600000000" class="team-wa"><button class="btn-remove" onclick="removeRow(this,'wa')">x</button></div>
+  </div>
+  <button class="btn-add" onclick="addRow('wa')">+ Ajouter un numero</button>
+
+  <div style="margin-top:16px;margin-bottom:8px;">
+    <label style="margin:0;font-weight:600;color:#42a5f5;">Emails (optionnel)</label>
+  </div>
+  <div class="contact-list" id="emailList">
+    <div class="contact-row"><input type="email" placeholder="email@exemple.com" class="team-email"><button class="btn-remove" onclick="removeRow(this,'email')">x</button></div>
+    <div class="contact-row"><input type="email" placeholder="email@exemple.com" class="team-email"><button class="btn-remove" onclick="removeRow(this,'email')">x</button></div>
+  </div>
+  <button class="btn-add" onclick="addRow('email')">+ Ajouter un email</button>
+</div>
+
+<div class="notifier-card">
+  <h3>Envoyer une notification</h3>
+
+  <label>Lien Reddit du post ou commentaire</label>
+  <input type="url" id="redditLink" placeholder="https://www.reddit.com/r/marketing/comments/..." oninput="checkReady()">
+
+  <label>Type d'action</label>
+  <select id="actionType">
+    <option value="comment">J'ai laisse un commentaire</option>
+    <option value="post">J'ai publie un post</option>
+    <option value="reply">J'ai repondu a quelqu'un</option>
+  </select>
+
+  <label>Note (optionnel)</label>
+  <textarea id="noteText" placeholder="Ex: J'ai mentionne le produit dans ce comparatif..."></textarea>
+
+  <div class="btn-actions">
+    <button class="btn-send btn-whatsapp" id="btnWA" onclick="sendWhatsApp()" disabled>Envoyer via WhatsApp</button>
+    <button class="btn-send btn-copy" id="btnCopy" onclick="copyMessage()" disabled>Copier le message</button>
+    <button class="btn-send btn-mailto" id="btnEmail" onclick="sendEmail()" disabled>Envoyer par Email</button>
+  </div>
+</div>
+
+<div class="notifier-card" id="previewCard" style="display:none;">
+  <h3>Apercu du message</h3>
+  <div id="msgPreview" style="background:#111;border-radius:8px;padding:12px;font-size:13px;white-space:pre-wrap;color:#ccc;border:1px solid #333;"></div>
+</div>
+
+<div class="history" id="historySection" style="display:none;">
+  <h4>Historique des notifications</h4>
+  <div id="historyList"></div>
+</div>
+
+</div>
+
+<div class="toast" id="toast">Message copie !</div>
+
+<div class="section" id="sec-regles">
+
+<div class="rule tip">
+  <h4>Regle 90/10</h4>
+  <p>Pour 1 post promotionnel, tu dois avoir 9 contributions 100% organiques. C'est la regle d'or de Reddit.</p>
+</div>
+
+<div class="rule">
+  <h4>Jamais d'upvote croise</h4>
+  <p>Ne JAMAIS upvoter tes posts avec un autre compte. Reddit detecte les IPs et cookies. Ban permanent de TOUS les comptes.</p>
+</div>
+
+<div class="rule">
+  <h4>Jamais de copier-coller</h4>
+  <p>Chaque commentaire doit etre unique. Meme si le sujet est similaire, reformule. Les bots detectent le contenu duplique.</p>
+</div>
+
+<div class="rule">
+  <h4>Pas de lien les 7 premiers jours</h4>
+  <p>Un nouveau compte qui poste des liens = spam. Attends minimum 7 jours et 50 karma.</p>
+</div>
+
+<div class="rule">
+  <h4>1 compte = 1 navigateur</h4>
+  <p>Utilise un profil Chrome/Firefox different par compte. Jamais deux comptes sur le meme profil navigateur.</p>
+</div>
+
+<div class="rule">
+  <h4>Respecte les moderateurs</h4>
+  <p>Si un mod te contacte, reponds poliment. Si ton post est supprime, ne le reposte pas. Les mods ont un pouvoir absolu.</p>
+</div>
+
+<div class="rule">
+  <h4>Pas d'agressivite</h4>
+  <p>Si quelqu'un est negatif, ignore ou reponds calmement. Les reports pour harassment = ban de tout Reddit.</p>
+</div>
+
+<div class="rule tip">
+  <h4>Poster au bon moment</h4>
+  <p>Meilleur moment : 8h-10h EST (14h-16h Paris/Casablanca). Commente sur les posts en "Rising" pour plus de visibilite.</p>
+</div>
+
+<div class="rule tip">
+  <h4>Premiere mention de produit = sans lien</h4>
+  <p>Mentionne juste le nom. Si les gens sont interesses, ils demanderont le lien. Ca parait naturel et ca evite les filtres anti-spam.</p>
+</div>
+
+<div class="rule tip">
+  <h4>Planning quotidien : 30 min/compte</h4>
+  <p>Matin 10 min (scroll + upvotes + 2 commentaires) / Midi 10 min (repondre aux notifs + 2-3 commentaires) / Soir 10 min (1 commentaire long ou preparer un post).</p>
+</div>
+
+</div>
+
+</div>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sec-' + name).classList.add('active');
+  const tabs = document.querySelectorAll('.tab');
+  const map = { checklist: 0, notifier: 1, regles: 2 };
+  tabs[map[name]].classList.add('active');
+}
+
+function up() {
+  const cbs = document.querySelectorAll('.cb');
+  let done = 0;
+  cbs.forEach(cb => {
+    const t = cb.closest('.task');
+    if (cb.checked) { done++; t.classList.add('done'); } else { t.classList.remove('done'); }
+  });
+  const pct = Math.round((done / cbs.length) * 100);
+  document.getElementById('pFill').style.width = pct + '%';
+  document.getElementById('pctText').textContent = done + '/' + cbs.length + ' (' + pct + '%)';
+  const state = []; cbs.forEach(cb => state.push(cb.checked));
+  try { localStorage.setItem('rw_check', JSON.stringify(state)); } catch(e) {}
+}
+try {
+  const saved = JSON.parse(localStorage.getItem('rw_check'));
+  if (saved) {
+    const cbs = document.querySelectorAll('.cb');
+    saved.forEach((v, i) => { if (cbs[i]) cbs[i].checked = v; });
+    up();
+  }
+} catch(e) {}
+up();
+
+function addRow(type) {
+  const listId = type === 'wa' ? 'waList' : 'emailList';
+  const cls = type === 'wa' ? 'team-wa' : 'team-email';
+  const ph = type === 'wa' ? '+212600000000' : 'email@exemple.com';
+  const inputType = type === 'wa' ? 'tel' : 'email';
+  const list = document.getElementById(listId);
+  const row = document.createElement('div');
+  row.className = 'contact-row';
+  row.innerHTML = '<input type="' + inputType + '" placeholder="' + ph + '" class="' + cls + '"><button class="btn-remove" onclick="removeRow(this,\'' + type + '\')">x<\/button>';
+  list.appendChild(row);
+  saveContacts();
+}
+function removeRow(btn, type) {
+  const listId = type === 'wa' ? 'waList' : 'emailList';
+  const rows = document.getElementById(listId).querySelectorAll('.contact-row');
+  if (rows.length > 1) { btn.parentElement.remove(); saveContacts(); }
+}
+function getNumbers() {
+  const nums = [];
+  document.querySelectorAll('.team-wa').forEach(inp => {
+    let v = inp.value.trim().replace(/\s/g, '');
+    if (v && v.length >= 8) { if (!v.startsWith('+')) v = '+' + v; nums.push(v); }
+  });
+  return nums;
+}
+function getEmails() {
+  const emails = [];
+  document.querySelectorAll('.team-email').forEach(inp => {
+    const v = inp.value.trim();
+    if (v && v.includes('@')) emails.push(v);
+  });
+  return emails;
+}
+function saveContacts() {
+  const wa = []; document.querySelectorAll('.team-wa').forEach(inp => wa.push(inp.value));
+  const em = []; document.querySelectorAll('.team-email').forEach(inp => em.push(inp.value));
+  try { localStorage.setItem('rw_wa', JSON.stringify(wa)); localStorage.setItem('rw_emails', JSON.stringify(em)); } catch(e) {}
+}
+function restoreList(key, listId, cls, ph, inputType, type) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(key));
+    if (saved && saved.length) {
+      const list = document.getElementById(listId);
+      list.innerHTML = '';
+      saved.forEach(v => {
+        const row = document.createElement('div');
+        row.className = 'contact-row';
+        row.innerHTML = '<input type="' + inputType + '" placeholder="' + ph + '" class="' + cls + '" value="' + (v||'') + '"><button class="btn-remove" onclick="removeRow(this,\'' + type + '\')">x<\/button>';
+        list.appendChild(row);
+      });
+    }
+  } catch(e) {}
+}
+restoreList('rw_wa', 'waList', 'team-wa', '+212600000000', 'tel', 'wa');
+restoreList('rw_emails', 'emailList', 'team-email', 'email@exemple.com', 'email', 'email');
+document.getElementById('waList').addEventListener('input', saveContacts);
+document.getElementById('emailList').addEventListener('input', saveContacts);
+
+function buildMessage() {
+  const link = document.getElementById('redditLink').value.trim();
+  const action = document.getElementById('actionType');
+  const actionText = action.options[action.selectedIndex].text;
+  const note = document.getElementById('noteText').value.trim();
+  let msg = 'Reddit Linkflows - Action requise !\n\n';
+  msg += 'Houssein vient de publier sur Reddit.\n\n';
+  msg += 'Action : ' + actionText + '\n';
+  msg += 'Lien : ' + link + '\n';
+  if (note) msg += 'Note : ' + note + '\n';
+  msg += '\nMerci d\'aller upvoter et/ou laisser un commentaire de soutien !\n\n';
+  msg += 'Rappel : Ne pas upvoter depuis le meme reseau/IP que le compte qui a poste.';
+  return msg;
+}
+
+function checkReady() {
+  const link = document.getElementById('redditLink').value.trim();
+  const ok = link.length > 5;
+  document.getElementById('btnWA').disabled = !ok;
+  document.getElementById('btnCopy').disabled = !ok;
+  document.getElementById('btnEmail').disabled = !ok;
+  const card = document.getElementById('previewCard');
+  if (ok) { card.style.display = 'block'; document.getElementById('msgPreview').textContent = buildMessage(); }
+  else { card.style.display = 'none'; }
+}
+document.getElementById('actionType').addEventListener('change', checkReady);
+document.getElementById('noteText').addEventListener('input', checkReady);
+
+function sendWhatsApp() {
+  const nums = getNumbers();
+  const msg = encodeURIComponent(buildMessage());
+  if (nums.length === 0) { alert('Ajoute au moins un numero WhatsApp !'); return; }
+  const first = nums[0].replace('+', '');
+  window.open('https://wa.me/' + first + '?text=' + msg, '_blank');
+  if (nums.length > 1) {
+    const remaining = nums.slice(1).join(', ');
+    showToast('Envoie aussi a : ' + remaining);
+  } else {
+    showToast('WhatsApp ouvert !');
+  }
+  addToHistory(document.getElementById('redditLink').value.trim(), document.getElementById('actionType').options[document.getElementById('actionType').selectedIndex].text);
+}
+
+function copyMessage() {
+  const msg = buildMessage();
+  navigator.clipboard.writeText(msg).then(() => {
+    showToast('Message copie ! Colle-le dans WhatsApp, Slack, etc.');
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = msg; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    showToast('Message copie !');
+  });
+  addToHistory(document.getElementById('redditLink').value.trim(), document.getElementById('actionType').options[document.getElementById('actionType').selectedIndex].text);
+}
+
+function sendEmail() {
+  const emails = getEmails();
+  if (emails.length === 0) { alert('Ajoute au moins un email !'); return; }
+  const action = document.getElementById('actionType');
+  const actionText = action.options[action.selectedIndex].text;
+  const subject = encodeURIComponent('Reddit - Action requise : ' + actionText);
+  const body = encodeURIComponent(buildMessage());
+  window.location.href = 'mailto:' + emails.join(',') + '?subject=' + subject + '&body=' + body;
+  addToHistory(document.getElementById('redditLink').value.trim(), actionText);
+}
+
+function showToast(text) {
+  const t = document.getElementById('toast');
+  t.textContent = text;
+  t.style.display = 'block';
+  setTimeout(() => { t.style.display = 'none'; }, 3000);
+}
+
+function addToHistory(link, action) {
+  let hist = [];
+  try { hist = JSON.parse(localStorage.getItem('rw_history')) || []; } catch(e) {}
+  const now = new Date();
+  const time = now.toLocaleDateString('fr-FR') + ' ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+  hist.unshift({ link, action, time, emails: getEmails().length });
+  if (hist.length > 50) hist = hist.slice(0, 50);
+  try { localStorage.setItem('rw_history', JSON.stringify(hist)); } catch(e) {}
+  renderHistory();
+}
+
+function renderHistory() {
+  let hist = [];
+  try { hist = JSON.parse(localStorage.getItem('rw_history')) || []; } catch(e) {}
+  const sec = document.getElementById('historySection');
+  const list = document.getElementById('historyList');
+  if (hist.length === 0) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+  list.innerHTML = hist.map(h =>
+    '<div class="history-item">' +
+      '<a href="' + h.link + '" target="_blank" class="hi-link">' + h.action + '<\/a>' +
+      '<span class="hi-count">' + h.emails + ' emails<\/span>' +
+      '<span class="hi-time">' + h.time + '<\/span>' +
+    '<\/div>'
+  ).join('');
+}
+renderHistory();
+<\/script>
+</body>
+</html>
