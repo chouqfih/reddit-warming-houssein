@@ -8,24 +8,49 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: -apple-system, 'Segoe UI', sans-serif; background: #111; color: #ddd; line-height: 1.5; }
   .app { max-width: 640px; margin: 0 auto; padding: 16px; }
+
+  /* Login */
+  .login-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+  .login-box { background: #1a1a1a; border-radius: 16px; padding: 32px; width: 100%; max-width: 400px; border: 1px solid #222; }
+  .login-box h1 { color: #ff4500; font-size: 24px; text-align: center; margin-bottom: 4px; }
+  .login-box p { color: #888; font-size: 13px; text-align: center; margin-bottom: 24px; }
+  .login-box label { font-size: 12px; color: #888; display: block; margin-bottom: 4px; margin-top: 14px; }
+  .login-box input { width: 100%; background: #111; border: 1px solid #333; border-radius: 8px; padding: 12px; color: #ddd; font-size: 14px; }
+  .login-box input:focus { border-color: #ff4500; outline: none; }
+  .login-btn { width: 100%; background: #ff4500; border: none; color: white; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 20px; transition: opacity 0.2s; }
+  .login-btn:hover { opacity: 0.85; }
+  .login-error { color: #ef5350; font-size: 12px; text-align: center; margin-top: 10px; display: none; }
+  .login-logo { font-size: 40px; margin-bottom: 16px; }
+
+  /* Header */
   .header { background: #ff4500; border-radius: 12px; padding: 24px; text-align: center; color: white; margin-bottom: 20px; }
   .header h1 { font-size: 22px; margin-bottom: 4px; }
   .header p { font-size: 14px; opacity: 0.85; }
+  .logout-btn { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.15); border: none; color: white; padding: 6px 14px; border-radius: 8px; font-size: 12px; cursor: pointer; }
+  .logout-btn:hover { background: rgba(255,255,255,0.25); }
+
+  /* Tabs */
   .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
   .tab { flex: 1; padding: 10px; text-align: center; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 600; color: #888; transition: all 0.2s; }
   .tab.active { background: #ff4500; border-color: #ff4500; color: white; }
+
+  /* Sections */
   .section { display: none; }
   .section.active { display: block; }
+
+  /* Progress */
   .progress { background: #1a1a1a; border-radius: 10px; padding: 14px; margin-bottom: 16px; border: 1px solid #222; }
   .progress-bar { background: #222; border-radius: 6px; height: 10px; overflow: hidden; margin-top: 8px; }
   .progress-fill { background: #ff4500; height: 100%; border-radius: 6px; transition: width 0.4s; width: 0%; }
   .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: #888; }
+
+  /* Task list */
   .week-title { font-size: 16px; font-weight: 700; padding: 14px 0 8px; border-bottom: 1px solid #222; margin-bottom: 10px; color: #ff8a65; }
   .task { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid #1a1a1a; align-items: flex-start; }
   .task:last-child { border-bottom: none; }
   .cb { appearance: none; -webkit-appearance: none; width: 20px; height: 20px; border: 2px solid #444; border-radius: 5px; cursor: pointer; flex-shrink: 0; margin-top: 1px; position: relative; }
   .cb:checked { background: #ff4500; border-color: #ff4500; }
-  .cb:checked::after { content: '\2713'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: white; font-size: 13px; font-weight: 700; }
+  .cb:checked::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: white; font-size: 13px; font-weight: 700; }
   .task-text { font-size: 14px; }
   .task.done .task-text { text-decoration: line-through; color: #555; }
   .tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle; }
@@ -33,18 +58,24 @@
   .tag.s1 { background: #1a2a3a; color: #42a5f5; }
   .tag.s2 { background: #3a2a1a; color: #ffa726; }
   .tag.s3 { background: #3a1a2a; color: #ef5350; }
+
+  /* Alert box */
   .alert { background: #2a1010; border: 1px solid #4a1515; border-radius: 10px; padding: 12px; margin: 14px 0; font-size: 13px; color: #ef9a9a; }
-  .notifier-card { background: #1a1a1a; border-radius: 12px; padding: 20px; border: 1px solid #222; margin-bottom: 16px; }
+
+  /* ===== NOTIFIER TAB ===== */
+  .notifier-card { background: #1a1a1a; border-radius: 12px; padding: 20px; border: 1px solid #22; margin-bottom: 16px; }
   .notifier-card h3 { font-size: 15px; margin-bottom: 12px; color: #ff8a65; }
   .notifier-card label { font-size: 12px; color: #888; display: block; margin-bottom: 4px; margin-top: 12px; }
   .notifier-card input, .notifier-card select, .notifier-card textarea { width: 100%; background: #111; border: 1px solid #333; border-radius: 8px; padding: 10px; color: #ddd; font-size: 14px; font-family: inherit; }
   .notifier-card textarea { height: 60px; resize: vertical; }
   .notifier-card input:focus, .notifier-card textarea:focus { border-color: #ff4500; outline: none; }
+
   .contact-list { margin-top: 12px; }
   .contact-row { display: flex; gap: 8px; margin-bottom: 6px; align-items: center; }
   .contact-row input { flex: 1; }
   .btn-remove { background: #3a1a1a; border: none; color: #ef5350; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-size: 16px; }
   .btn-add { background: #1a2a1a; border: 1px dashed #4caf50; color: #4caf50; padding: 8px; border-radius: 8px; cursor: pointer; font-size: 13px; width: 100%; margin-top: 6px; }
+
   .btn-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
   .btn-send { border: none; color: white; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; width: 100%; transition: opacity 0.2s; }
   .btn-send:hover { opacity: 0.85; }
@@ -52,13 +83,17 @@
   .btn-whatsapp { background: #25d366; }
   .btn-copy { background: #555; }
   .btn-mailto { background: #ff4500; }
+
   .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #25d366; color: white; padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 600; z-index: 9999; display: none; }
+
   .history { margin-top: 16px; }
   .history h4 { font-size: 13px; color: #888; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
   .history-item { background: #111; border-radius: 8px; padding: 10px; margin-bottom: 6px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
   .history-item .hi-link { color: #42a5f5; text-decoration: none; word-break: break-all; flex: 1; margin-right: 10px; }
   .history-item .hi-time { color: #555; font-size: 11px; white-space: nowrap; }
   .history-item .hi-count { background: #1a2a1a; color: #66bb6a; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 8px; white-space: nowrap; }
+
+  /* ===== REGLES TAB ===== */
   .rule { background: #1a1a1a; border-radius: 10px; padding: 14px; margin-bottom: 10px; border-left: 3px solid #ef5350; }
   .rule.tip { border-left-color: #66bb6a; }
   .rule h4 { font-size: 14px; margin-bottom: 4px; }
@@ -66,19 +101,49 @@
 </style>
 </head>
 <body>
-<div class="app">
+
+<!-- ================================ -->
+<!-- LOGIN SCREEN -->
+<!-- ================================ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div style="text-align:center;"><span class="login-logo">🔒</span></div>
+    <h1>Reddit Warming</h1>
+    <p>Linkflows - Acces reserve a l'equipe</p>
+
+    <label>Identifiant</label>
+    <input type="text" id="loginUser" placeholder="Ton prenom" autocomplete="off">
+
+    <label>Mot de passe</label>
+    <input type="password" id="loginPass" placeholder="Mot de passe" autocomplete="off">
+
+    <button class="login-btn" onclick="doLogin()">Se connecter</button>
+    <div class="login-error" id="loginError">Identifiant ou mot de passe incorrect.</div>
+  </div>
+</div>
+
+<!-- ================================ -->
+<!-- MAIN APP (hidden until login) -->
+<!-- ================================ -->
+<div class="app" id="mainApp" style="display:none; position:relative;">
+
+<button class="logout-btn" onclick="doLogout()">Deconnexion</button>
 
 <div class="header">
   <h1>Reddit Warming</h1>
   <p>Guide de Houssein - Linkflows</p>
 </div>
 
+<!-- TABS -->
 <div class="tabs">
   <div class="tab active" onclick="showTab('checklist')">Checklist</div>
   <div class="tab" onclick="showTab('notifier')">Notifier l'equipe</div>
   <div class="tab" onclick="showTab('regles')">Regles</div>
 </div>
 
+<!-- ================================ -->
+<!-- TAB 1 : CHECKLIST -->
+<!-- ================================ -->
 <div class="section active" id="sec-checklist">
 
 <div class="progress">
@@ -89,6 +154,7 @@
   <div class="progress-bar"><div class="progress-fill" id="pFill"></div></div>
 </div>
 
+<!-- JOUR 1 -->
 <div class="week-title">Jour 1 - Creer le compte</div>
 <div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Creer un email dedie (Gmail/Outlook) <span class="tag j1">J1</span></div></div>
 <div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Creer le compte Reddit avec un pseudo naturel (pas de nom de marque)</div></div>
@@ -99,6 +165,7 @@
 <div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Rejoindre 2-3 subreddits perso (hobbies : foot, cuisine, gaming...)</div></div>
 <div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Lire les regles de chaque subreddit cible</div></div>
 
+<!-- SEMAINE 1 -->
 <div class="week-title">Semaine 1 - Observer et reagir (objectif : 100 karma)</div>
 <div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Upvoter 10-15 posts/jour sur differents subreddits <span class="tag s1">Chaque jour</span></div></div>
 <div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Laisser 3-5 commentaires/jour sur r/AskReddit (posts en "Rising")</div></div>
@@ -109,6 +176,7 @@
 
 <div class="alert">Zero lien, zero mention de produit cette semaine. Uniquement des commentaires utiles et naturels.</div>
 
+<!-- SEMAINE 2 -->
 <div class="week-title">Semaine 2 - Contribuer activement (objectif : 500 karma)</div>
 <div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Creer 1er post texte sur un subreddit facile (question sur r/AskReddit ou tip sur r/LifeProTips) <span class="tag s2">S2</span></div></div>
 <div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Ecrire 1 post de valeur sur un subreddit cible (ex: "5 erreurs en marketing digital")</div></div>
@@ -117,6 +185,7 @@
 <div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Atteindre 200+ karma</div></div>
 <div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Atteindre 500 karma - Fin de semaine 2</div></div>
 
+<!-- SEMAINE 3-4 -->
 <div class="week-title">Semaines 3-4 - Premiere promo douce (regle 90/10)</div>
 <div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Repondre a une question en mentionnant le produit naturellement + alternatives <span class="tag s3">S3-4</span></div></div>
 <div class="task"><input type="checkbox" class="cb" onchange="up()"><div class="task-text">Ecrire un post "retour d'experience" ou "comparatif d'outils" incluant le produit</div></div>
@@ -127,6 +196,9 @@
 
 </div>
 
+<!-- ================================ -->
+<!-- TAB 2 : NOTIFIER -->
+<!-- ================================ -->
 <div class="section" id="sec-notifier">
 
 <div class="notifier-card">
@@ -191,6 +263,9 @@
 
 <div class="toast" id="toast">Message copie !</div>
 
+<!-- ================================ -->
+<!-- TAB 3 : REGLES -->
+<!-- ================================ -->
 <div class="section" id="sec-regles">
 
 <div class="rule tip">
@@ -245,105 +320,204 @@
 
 </div>
 
-</div>
+</div><!-- /mainApp -->
 
 <script>
+// ===========================
+// LOGIN SYSTEM
+// ===========================
+// Credentials - change these as needed
+var VALID_USERS = {
+  'houssein': 'linkflows2024',
+  'hassan': 'linkflows2024',
+  'admin': 'linkflows2024'
+};
+
+function doLogin() {
+  var user = document.getElementById('loginUser').value.trim().toLowerCase();
+  var pass = document.getElementById('loginPass').value;
+  if (VALID_USERS[user] && VALID_USERS[user] === pass) {
+    try { localStorage.setItem('rw_logged', user); } catch(e) {}
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+    document.getElementById('loginError').style.display = 'none';
+    initApp();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+function doLogout() {
+  try { localStorage.removeItem('rw_logged'); } catch(e) {}
+  document.getElementById('mainApp').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+}
+
+// Auto-login if session exists
+(function checkSession() {
+  try {
+    var logged = localStorage.getItem('rw_logged');
+    if (logged && VALID_USERS[logged]) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('mainApp').style.display = 'block';
+      initApp();
+    }
+  } catch(e) {}
+})();
+
+// Enter key on password field
+document.getElementById('loginPass').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doLogin();
+});
+document.getElementById('loginUser').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') document.getElementById('loginPass').focus();
+});
+
+// ===========================
+// TABS
+// ===========================
 function showTab(name) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
   document.getElementById('sec-' + name).classList.add('active');
-  const tabs = document.querySelectorAll('.tab');
-  const map = { checklist: 0, notifier: 1, regles: 2 };
+  var tabs = document.querySelectorAll('.tab');
+  var map = { checklist: 0, notifier: 1, regles: 2 };
   tabs[map[name]].classList.add('active');
 }
 
+// ===========================
+// CHECKLIST
+// ===========================
 function up() {
-  const cbs = document.querySelectorAll('.cb');
-  let done = 0;
-  cbs.forEach(cb => {
-    const t = cb.closest('.task');
+  var cbs = document.querySelectorAll('.cb');
+  var done = 0;
+  cbs.forEach(function(cb) {
+    var t = cb.closest('.task');
     if (cb.checked) { done++; t.classList.add('done'); } else { t.classList.remove('done'); }
   });
-  const pct = Math.round((done / cbs.length) * 100);
+  var pct = Math.round((done / cbs.length) * 100);
   document.getElementById('pFill').style.width = pct + '%';
   document.getElementById('pctText').textContent = done + '/' + cbs.length + ' (' + pct + '%)';
-  const state = []; cbs.forEach(cb => state.push(cb.checked));
+  var state = [];
+  cbs.forEach(function(cb) { state.push(cb.checked); });
   try { localStorage.setItem('rw_check', JSON.stringify(state)); } catch(e) {}
 }
-try {
-  const saved = JSON.parse(localStorage.getItem('rw_check'));
-  if (saved) {
-    const cbs = document.querySelectorAll('.cb');
-    saved.forEach((v, i) => { if (cbs[i]) cbs[i].checked = v; });
-    up();
-  }
-} catch(e) {}
-up();
 
+function restoreChecklist() {
+  try {
+    var saved = JSON.parse(localStorage.getItem('rw_check'));
+    if (saved) {
+      var cbs = document.querySelectorAll('.cb');
+      saved.forEach(function(v, i) { if (cbs[i]) cbs[i].checked = v; });
+    }
+  } catch(e) {}
+  up();
+}
+
+// ===========================
+// CONTACT LISTS
+// ===========================
 function addRow(type) {
-  const listId = type === 'wa' ? 'waList' : 'emailList';
-  const cls = type === 'wa' ? 'team-wa' : 'team-email';
-  const ph = type === 'wa' ? '+212600000000' : 'email@exemple.com';
-  const inputType = type === 'wa' ? 'tel' : 'email';
-  const list = document.getElementById(listId);
-  const row = document.createElement('div');
+  var listId = type === 'wa' ? 'waList' : 'emailList';
+  var cls = type === 'wa' ? 'team-wa' : 'team-email';
+  var ph = type === 'wa' ? '+212600000000' : 'email@exemple.com';
+  var inputType = type === 'wa' ? 'tel' : 'email';
+  var list = document.getElementById(listId);
+  var row = document.createElement('div');
   row.className = 'contact-row';
-  row.innerHTML = '<input type="' + inputType + '" placeholder="' + ph + '" class="' + cls + '"><button class="btn-remove" onclick="removeRow(this,\'' + type + '\')">x<\/button>';
+  var inp = document.createElement('input');
+  inp.type = inputType;
+  inp.placeholder = ph;
+  inp.className = cls;
+  var btn = document.createElement('button');
+  btn.className = 'btn-remove';
+  btn.textContent = 'x';
+  btn.onclick = function() { removeRow(btn, type); };
+  row.appendChild(inp);
+  row.appendChild(btn);
   list.appendChild(row);
   saveContacts();
 }
+
 function removeRow(btn, type) {
-  const listId = type === 'wa' ? 'waList' : 'emailList';
-  const rows = document.getElementById(listId).querySelectorAll('.contact-row');
+  var listId = type === 'wa' ? 'waList' : 'emailList';
+  var rows = document.getElementById(listId).querySelectorAll('.contact-row');
   if (rows.length > 1) { btn.parentElement.remove(); saveContacts(); }
 }
+
 function getNumbers() {
-  const nums = [];
-  document.querySelectorAll('.team-wa').forEach(inp => {
-    let v = inp.value.trim().replace(/\s/g, '');
+  var nums = [];
+  document.querySelectorAll('.team-wa').forEach(function(inp) {
+    var v = inp.value.trim().replace(/\s/g, '');
     if (v && v.length >= 8) { if (!v.startsWith('+')) v = '+' + v; nums.push(v); }
   });
   return nums;
 }
+
 function getEmails() {
-  const emails = [];
-  document.querySelectorAll('.team-email').forEach(inp => {
-    const v = inp.value.trim();
+  var emails = [];
+  document.querySelectorAll('.team-email').forEach(function(inp) {
+    var v = inp.value.trim();
     if (v && v.includes('@')) emails.push(v);
   });
   return emails;
 }
+
 function saveContacts() {
-  const wa = []; document.querySelectorAll('.team-wa').forEach(inp => wa.push(inp.value));
-  const em = []; document.querySelectorAll('.team-email').forEach(inp => em.push(inp.value));
-  try { localStorage.setItem('rw_wa', JSON.stringify(wa)); localStorage.setItem('rw_emails', JSON.stringify(em)); } catch(e) {}
+  var wa = [];
+  document.querySelectorAll('.team-wa').forEach(function(inp) { wa.push(inp.value); });
+  var em = [];
+  document.querySelectorAll('.team-email').forEach(function(inp) { em.push(inp.value); });
+  try {
+    localStorage.setItem('rw_wa', JSON.stringify(wa));
+    localStorage.setItem('rw_emails', JSON.stringify(em));
+  } catch(e) {}
 }
+
+function restoreContacts() {
+  restoreList('rw_wa', 'waList', 'team-wa', '+212600000000', 'tel', 'wa');
+  restoreList('rw_emails', 'emailList', 'team-email', 'email@exemple.com', 'email', 'email');
+  document.getElementById('waList').addEventListener('input', saveContacts);
+  document.getElementById('emailList').addEventListener('input', saveContacts);
+}
+
 function restoreList(key, listId, cls, ph, inputType, type) {
   try {
-    const saved = JSON.parse(localStorage.getItem(key));
+    var saved = JSON.parse(localStorage.getItem(key));
     if (saved && saved.length) {
-      const list = document.getElementById(listId);
+      var list = document.getElementById(listId);
       list.innerHTML = '';
-      saved.forEach(v => {
-        const row = document.createElement('div');
+      saved.forEach(function(v) {
+        var row = document.createElement('div');
         row.className = 'contact-row';
-        row.innerHTML = '<input type="' + inputType + '" placeholder="' + ph + '" class="' + cls + '" value="' + (v||'') + '"><button class="btn-remove" onclick="removeRow(this,\'' + type + '\')">x<\/button>';
+        var inp = document.createElement('input');
+        inp.type = inputType;
+        inp.placeholder = ph;
+        inp.className = cls;
+        inp.value = v || '';
+        var btn = document.createElement('button');
+        btn.className = 'btn-remove';
+        btn.textContent = 'x';
+        btn.onclick = function() { removeRow(btn, type); };
+        row.appendChild(inp);
+        row.appendChild(btn);
         list.appendChild(row);
       });
     }
   } catch(e) {}
 }
-restoreList('rw_wa', 'waList', 'team-wa', '+212600000000', 'tel', 'wa');
-restoreList('rw_emails', 'emailList', 'team-email', 'email@exemple.com', 'email', 'email');
-document.getElementById('waList').addEventListener('input', saveContacts);
-document.getElementById('emailList').addEventListener('input', saveContacts);
 
+// ===========================
+// BUILD MESSAGE
+// ===========================
 function buildMessage() {
-  const link = document.getElementById('redditLink').value.trim();
-  const action = document.getElementById('actionType');
-  const actionText = action.options[action.selectedIndex].text;
-  const note = document.getElementById('noteText').value.trim();
-  let msg = 'Reddit Linkflows - Action requise !\n\n';
+  var link = document.getElementById('redditLink').value.trim();
+  var action = document.getElementById('actionType');
+  var actionText = action.options[action.selectedIndex].text;
+  var note = document.getElementById('noteText').value.trim();
+  var msg = 'Reddit Linkflows - Action requise !\n\n';
   msg += 'Houssein vient de publier sur Reddit.\n\n';
   msg += 'Action : ' + actionText + '\n';
   msg += 'Lien : ' + link + '\n';
@@ -353,27 +527,32 @@ function buildMessage() {
   return msg;
 }
 
+// ===========================
+// NOTIFIER
+// ===========================
 function checkReady() {
-  const link = document.getElementById('redditLink').value.trim();
-  const ok = link.length > 5;
+  var link = document.getElementById('redditLink').value.trim();
+  var ok = link.length > 5;
   document.getElementById('btnWA').disabled = !ok;
   document.getElementById('btnCopy').disabled = !ok;
   document.getElementById('btnEmail').disabled = !ok;
-  const card = document.getElementById('previewCard');
-  if (ok) { card.style.display = 'block'; document.getElementById('msgPreview').textContent = buildMessage(); }
-  else { card.style.display = 'none'; }
+  var card = document.getElementById('previewCard');
+  if (ok) {
+    card.style.display = 'block';
+    document.getElementById('msgPreview').textContent = buildMessage();
+  } else {
+    card.style.display = 'none';
+  }
 }
-document.getElementById('actionType').addEventListener('change', checkReady);
-document.getElementById('noteText').addEventListener('input', checkReady);
 
 function sendWhatsApp() {
-  const nums = getNumbers();
-  const msg = encodeURIComponent(buildMessage());
+  var nums = getNumbers();
+  var msg = encodeURIComponent(buildMessage());
   if (nums.length === 0) { alert('Ajoute au moins un numero WhatsApp !'); return; }
-  const first = nums[0].replace('+', '');
+  var first = nums[0].replace('+', '');
   window.open('https://wa.me/' + first + '?text=' + msg, '_blank');
   if (nums.length > 1) {
-    const remaining = nums.slice(1).join(', ');
+    var remaining = nums.slice(1).join(', ');
     showToast('Envoie aussi a : ' + remaining);
   } else {
     showToast('WhatsApp ouvert !');
@@ -382,62 +561,86 @@ function sendWhatsApp() {
 }
 
 function copyMessage() {
-  const msg = buildMessage();
-  navigator.clipboard.writeText(msg).then(() => {
-    showToast('Message copie ! Colle-le dans WhatsApp, Slack, etc.');
-  }).catch(() => {
-    const ta = document.createElement('textarea');
-    ta.value = msg; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-    showToast('Message copie !');
-  });
+  var msg = buildMessage();
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(msg).then(function() {
+      showToast('Message copie ! Colle-le dans WhatsApp, Slack, etc.');
+    }).catch(function() {
+      fallbackCopy(msg);
+    });
+  } else {
+    fallbackCopy(msg);
+  }
   addToHistory(document.getElementById('redditLink').value.trim(), document.getElementById('actionType').options[document.getElementById('actionType').selectedIndex].text);
 }
 
+function fallbackCopy(msg) {
+  var ta = document.createElement('textarea');
+  ta.value = msg;
+  ta.style.position = 'fixed';
+  ta.style.left = '-9999px';
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy');
+  document.body.removeChild(ta);
+  showToast('Message copie !');
+}
+
 function sendEmail() {
-  const emails = getEmails();
+  var emails = getEmails();
   if (emails.length === 0) { alert('Ajoute au moins un email !'); return; }
-  const action = document.getElementById('actionType');
-  const actionText = action.options[action.selectedIndex].text;
-  const subject = encodeURIComponent('Reddit - Action requise : ' + actionText);
-  const body = encodeURIComponent(buildMessage());
-  window.location.href = 'mailto:' + emails.join(',') + '?subject=' + subject + '&body=' + body;
+  var action = document.getElementById('actionType');
+  var actionText = action.options[action.selectedIndex].text;
+  var subject = encodeURIComponent('Reddit - Action requise : ' + actionText);
+  var body = encodeURIComponent(buildMessage());
+  window.open('mailto:' + emails.join(',') + '?subject=' + subject + '&body=' + body, '_self');
   addToHistory(document.getElementById('redditLink').value.trim(), actionText);
 }
 
 function showToast(text) {
-  const t = document.getElementById('toast');
+  var t = document.getElementById('toast');
   t.textContent = text;
   t.style.display = 'block';
-  setTimeout(() => { t.style.display = 'none'; }, 3000);
+  setTimeout(function() { t.style.display = 'none'; }, 3000);
 }
 
 function addToHistory(link, action) {
-  let hist = [];
+  var hist = [];
   try { hist = JSON.parse(localStorage.getItem('rw_history')) || []; } catch(e) {}
-  const now = new Date();
-  const time = now.toLocaleDateString('fr-FR') + ' ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
-  hist.unshift({ link, action, time, emails: getEmails().length });
+  var now = new Date();
+  var time = now.toLocaleDateString('fr-FR') + ' ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+  hist.unshift({ link: link, action: action, time: time, count: getNumbers().length });
   if (hist.length > 50) hist = hist.slice(0, 50);
   try { localStorage.setItem('rw_history', JSON.stringify(hist)); } catch(e) {}
   renderHistory();
 }
 
 function renderHistory() {
-  let hist = [];
+  var hist = [];
   try { hist = JSON.parse(localStorage.getItem('rw_history')) || []; } catch(e) {}
-  const sec = document.getElementById('historySection');
-  const list = document.getElementById('historyList');
+  var sec = document.getElementById('historySection');
+  var list = document.getElementById('historyList');
   if (hist.length === 0) { sec.style.display = 'none'; return; }
   sec.style.display = 'block';
-  list.innerHTML = hist.map(h =>
-    '<div class="history-item">' +
-      '<a href="' + h.link + '" target="_blank" class="hi-link">' + h.action + '<\/a>' +
-      '<span class="hi-count">' + h.emails + ' emails<\/span>' +
-      '<span class="hi-time">' + h.time + '<\/span>' +
-    '<\/div>'
-  ).join('');
+  list.innerHTML = hist.map(function(h) {
+    return '<div class="history-item">' +
+      '<a href="' + h.link + '" target="_blank" class="hi-link">' + h.action + '</a>' +
+      '<span class="hi-count">' + (h.count || 0) + ' contacts</span>' +
+      '<span class="hi-time">' + h.time + '</span>' +
+    '</div>';
+  }).join('');
 }
-renderHistory();
-<\/script>
+
+// ===========================
+// INIT APP (called after login)
+// ===========================
+function initApp() {
+  restoreChecklist();
+  restoreContacts();
+  renderHistory();
+  document.getElementById('actionType').addEventListener('change', checkReady);
+  document.getElementById('noteText').addEventListener('input', checkReady);
+}
+</script>
 </body>
 </html>
